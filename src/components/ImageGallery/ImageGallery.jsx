@@ -53,12 +53,12 @@ export default class ImageGallery extends Component {
       if (status === 'resolved') {
         return (
           <ul className="gallery">
-            <ImageGalleryItem imageGallery={imageGallery} />
+            {imageGallery.hits.map(item => (
+              <ImageGalleryItem key={item.id} item={item} />
+            ))}
           </ul>
         );
-      }
-
-        
+      } 
   }
 }
 
