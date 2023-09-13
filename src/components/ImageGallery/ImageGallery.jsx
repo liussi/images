@@ -1,4 +1,3 @@
-import Button from 'components/Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import Loader from '../Loader/Loader';
 import React, { Component } from 'react'

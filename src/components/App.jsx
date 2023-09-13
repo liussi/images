@@ -62,7 +62,6 @@ export class App extends Component {
     return fetch(
       `https://pixabay.com/api/?q=${imageName}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
       ).then(response => {
-      console.log(currentPage);
       if (response.ok) {
         return response.json();
       }
