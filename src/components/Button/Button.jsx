@@ -45,7 +45,7 @@ class Button extends Component {
       
           
           console.log('imageGallery:', this.props.imageGallery);
-    const { imageName,prevProps, currentPage, App, onPageUpdate, imageGallery } =
+    const { imageName,prevProps, currentPage, App, onPageUpdate } =
       this.props;
         
     const nextPage = currentPage + 1;
