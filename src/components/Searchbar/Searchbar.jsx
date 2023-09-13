@@ -4,6 +4,7 @@
 export default class Searchbar extends Component {
   state = {
     imageName: '',
+  
   };
 
   handleSubmitName = e => {
@@ -12,11 +13,12 @@ export default class Searchbar extends Component {
 }
 
   handleSubmit = event => {
-      event.preventDefault();
+    event.preventDefault();
+    
       if (this.state.imageName.trim() === '') {
           return
       }
-      this.props.onSubmit(this.state.imageName)
+      this.props.onSubmit(this.state.imageName, this.state.currentPage);
       this.setState({ imageName: '' });
   }
   render() {

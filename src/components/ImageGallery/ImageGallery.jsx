@@ -1,64 +1,63 @@
+import Button from 'components/Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import Loader from '../Loader/Loader';
 import React, { Component } from 'react'
 
+
 export default class ImageGallery extends Component {
   state = {
     imageGallery: null,
-      error: null,
+    error: null,
     status: 'idle',
+    currentPage: 1,
   };
 
-    componentDidUpdate(prevProps, PrevState) {
-        if (prevProps.imageName !== this.props.imageName) {
-            const KEY = '38529296-de6c3fac31b2614a8135b6c10';
+  componentDidUpdate(prevProps, PrevState, App) {
+    if (prevProps.imageName !== this.props.imageName) {
+      this.setState({ status: 'pedding' });
 
-            this.setState({ status: 'pedding'});
+      const { currentPage } = this.state;
 
-            fetch(
-              `https://pixabay.com/api/?q=${this.props.imageName}&page=1&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
-            )
-              .then(response => {
-                if (response.ok) {
-                  return response.json();
-                }
-                return Promise.reject(
-                  new Error(`Таких фото немає${this.state.imageName}`)
-                );
-              })
-
-              .then(imageGallery =>
-                this.setState({ imageGallery, status: 'resolved' })
-              )
-              .catch(error => this.setState({ error, status: 'rejected' }))
-              .finally(() => this.setState({ loading: false }));
+      this.props
+        .App(this.props.imageName, currentPage)
+        .then(imageGallery =>
+          this.setState({
+            imageGallery,
+          // currentPage : 1,
+            status: 'resolved',
+          })
+        )
+        .catch(error => this.setState({ error, status: 'rejected' }))
+        .finally(() => this.setState({ loading: false }));
     }
-    }
-    
+  }
 
   render() {
-      const { imageGallery, status } = this.state;
-      if (status === 'idle') {
-          return <div>введіть імя або нотифікашка...</div>;
-      }
+    const { imageGallery, status } = this.state;
+    if (status === 'idle') {
+      return <div>введіть імя або нотифікашка...</div>;
+    }
 
-      if (status === 'pedding') {
-          return <Loader />;
-      }
+    if (status === 'pedding') {
+      return <Loader />;
+    }
 
-      if (status === 'rejected') {
-        return <h1>Помилка</h1>;
-      }
+    if (status === 'rejected') {
+      return <h1>Помилка</h1>;
+    }
 
-      if (status === 'resolved') {
-        return (
+    if (status === 'resolved') {
+      return (
+        <div>
           <ul className="gallery">
             {imageGallery.hits.map(item => (
               <ImageGalleryItem key={item.id} item={item} />
             ))}
           </ul>
-        );
-      } 
+      
+        </div>
+      );
+    }
   }
 }
 
