@@ -59,9 +59,11 @@ export class App extends Component {
 
   App(imageName, currentPage) {
     const KEY = '38529296-de6c3fac31b2614a8135b6c10';
+
+    console.log('currentPage:', currentPage);
     return fetch(
       `https://pixabay.com/api/?q=${imageName}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      ).then(response => {
+    ).then(response => {
       if (response.ok) {
         return response.json();
       }
@@ -73,6 +75,7 @@ export class App extends Component {
   handlePageUpdate = newPage => {
     this.setState({ currentPage: newPage });
   };
+  
 
   hendleFormSubmit = imageName => {
     if (imageName.trim() === '') {
@@ -90,15 +93,16 @@ export class App extends Component {
           imageName={this.state.imageName}
           App={this.App}
           currentPage={this.state.currentPage}
+          onPageUpdate={this.handlePageUpdate}
         />
-        {
+        {/* {
           <Button
             imageName={this.state.imageName}
             currentPage={this.state.currentPage}
             App={this.App}
             onPageUpdate={this.handlePageUpdate}
           />
-        }
+        } */}
       </div>
     );
   }

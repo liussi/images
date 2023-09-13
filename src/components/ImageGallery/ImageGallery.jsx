@@ -1,7 +1,7 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import Loader from '../Loader/Loader';
 import React, { Component } from 'react'
-
+import Button from 'components/Button/Button';
 
 export default class ImageGallery extends Component {
   state = {
@@ -53,7 +53,15 @@ export default class ImageGallery extends Component {
               <ImageGalleryItem key={item.id} item={item} />
             ))}
           </ul>
-      
+          {
+            <Button
+              currentPage={this.props.currentPage}
+              imageGallery={this.state.imageGallery}
+              App={this.props.App}
+              onPageUpdate={this.props.onPageUpdate}
+              imageName={this.props.imageName}
+            />
+          }
         </div>
       );
     }

@@ -9,7 +9,6 @@ export default class Searchbar extends Component {
 
   handleSubmitName = e => {
     this.setState({ imageName: e.currentTarget.value.toLowerCase() });
-    console.log(e.currentTarget.value);
 }
 
   handleSubmit = event => {
@@ -34,8 +33,8 @@ export default class Searchbar extends Component {
             value={this.state.imageName}
             className="input"
             type="text"
-            autocomplete="off"
-            autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
           />
         </form>

@@ -38,18 +38,30 @@ class Button extends Component {
     imageGallery: null,
     status: 'idle',
     loading: false,
-    currentPage : 1,
+  
   };
 
-  loadMoreImages = () => {
-    const { imageName, currentPage, App, onPageUpdate } = this.props;
+    loadMoreImages = () => {
+      
+          
+          console.log('imageGallery:', this.props.imageGallery);
+    const { imageName,prevProps, currentPage, App, onPageUpdate, imageGallery } =
+      this.props;
+        
     const nextPage = currentPage + 1;
-    console.log(nextPage);
-    console.log(currentPage);
+
     App(imageName, nextPage)
       .then(imageGallery => {
         onPageUpdate(nextPage); // Оновіть сторінку в батьківському компоненті
-        this.setState({ imageGallery, status: 'resolved' });
+        this.setState(
+          {
+            imageGallery: [...prevProps.imageGallery, imageGallery.hits],
+            status: 'resolved',
+          },
+          () => {
+            console.log('imageGallery:', this.state.imageGallery);
+          }
+        );
       })
       .catch(error => this.setState({ error, status: 'rejected' }))
       .finally(() => this.setState({ loading: false }));
