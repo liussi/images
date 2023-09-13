@@ -94,14 +94,7 @@ export class App extends Component {
           currentPage={this.state.currentPage}
           onPageUpdate={this.handlePageUpdate}
         />
-        {/* {
-          <Button
-            imageName={this.state.imageName}
-            currentPage={this.state.currentPage}
-            App={this.App}
-            onPageUpdate={this.handlePageUpdate}
-          />
-        } */}
+       
       </div>
     );
   }
