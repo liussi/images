@@ -2,6 +2,7 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import Loader from '../Loader/Loader';
 import React, { Component } from 'react'
 import Button from 'components/Button/Button';
+import Modal from '../Modal/Modal';
 
 export default class ImageGallery extends Component {
   state = {
@@ -9,6 +10,7 @@ export default class ImageGallery extends Component {
     error: null,
     status: 'idle',
     currentPage: 1,
+    isOpenModal: false,
   };
 
   componentDidUpdate(prevProps, PrevState, App) {
@@ -22,7 +24,7 @@ export default class ImageGallery extends Component {
         .then(imageGallery =>
           this.setState({
             imageGallery,
-          // currentPage : 1,
+            // currentPage : 1,
             status: 'resolved',
           })
         )
@@ -30,6 +32,9 @@ export default class ImageGallery extends Component {
         .finally(() => this.setState({ loading: false }));
     }
   }
+
+  openModal = () => this.setState({ isOpenModal: true });
+  closeModal = () => this.setState({ isOpenModal: false });
 
   render() {
     const { imageGallery, status } = this.state;
@@ -50,7 +55,11 @@ export default class ImageGallery extends Component {
         <div>
           <ul className="gallery">
             {imageGallery.hits.map(item => (
-              <ImageGalleryItem key={item.id} item={item} />
+              <ImageGalleryItem
+                key={item.id}
+                item={item}
+                onclick={this.openModal}
+              />
             ))}
           </ul>
           {
@@ -62,6 +71,11 @@ export default class ImageGallery extends Component {
               imageName={this.props.imageName}
             />
           }
+          <Modal
+            imageGallery={this.state.imageGallery.hits}
+            openModal={this.openModal}
+            closeModal={this.closeModal}
+          />
         </div>
       );
     }

@@ -48,6 +48,7 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -84,6 +85,7 @@ export class App extends Component {
     this.setState({ imageName });
   };
 
+ 
   render() {
     return (
       <div>
