@@ -1,9 +1,10 @@
+import { FaSearch } from 'react-icons/fa';
+import { IconContext } from 'react-icons';
 import React, { Component } from 'react';
 import {
   SearchbarContainer,
   SearchFormContainer,
   SearchFormButton,
-  SearchFormButtonLabel,
   SearchFormInput,
 } from './SearchForm.styled';
 
@@ -27,24 +28,25 @@ export default class Searchbar extends Component {
   };
   render() {
     return (
-      <SearchbarContainer >
-        <SearchFormContainer  onSubmit={this.handleSubmit}>
-          <SearchFormButton type="submit" >
-            <SearchFormButtonLabel >
-              Search
-            </SearchFormButtonLabel>
-          </SearchFormButton>
-
-          <SearchFormInput
-            onChange={this.handleSubmitName}
-            value={this.state.imageName}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </SearchFormContainer>
-      </SearchbarContainer>
+      <IconContext.Provider
+        value={{ color: 'blue', size: '2em'}}
+      >
+        <SearchbarContainer>
+          <SearchFormContainer onSubmit={this.handleSubmit}>
+            <SearchFormButton type="submit">
+                <FaSearch />
+            </SearchFormButton>
+            <SearchFormInput
+              onChange={this.handleSubmitName}
+              value={this.state.imageName}
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Search images and photos"
+            />
+          </SearchFormContainer>
+        </SearchbarContainer>
+      </IconContext.Provider>
     );
   }
 }

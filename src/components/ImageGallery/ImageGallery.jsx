@@ -98,7 +98,7 @@ export default class ImageGallery extends Component {
             <Modal
               imageGallery={this.state.imageGallery}
               openModal={this.openModal}
-              closeModal={this.closeModal}
+              onClose={this.closeModal}
               loadMoreImages={this.loadMoreImages}
               image={selectedImage}
             />

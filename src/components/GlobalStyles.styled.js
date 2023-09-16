@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
  const GlobalStyles = styled.div`
   html {
     box-sizing: border-box;
-    width: 100vw;
-    overflow-x: hidden;
+    /* width: 100vw;
+    overflow-x: hidden; */
   }
 
   *,
@@ -24,11 +24,9 @@ import styled from '@emotion/styled'
 
   img {
     display: block;
-    max-width: 100%;
   }
 `;
 
-// Стилі компонента App
 const AppContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
