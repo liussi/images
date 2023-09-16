@@ -1,8 +1,8 @@
 
   import React, { Component } from 'react'
-  
-export default class Modal extends Component {
+  import '../styles.css'
 
+export default class Modal extends Component {
   componentDidUpdate() {
     window.addEventListener('keydown', this.hendleEsc);
   }
@@ -10,20 +10,30 @@ export default class Modal extends Component {
     window.removeEventListener('keydown', this.hendleEsc);
   }
   hendleEsc = e => {
-    if (e.code === 'Escape') this.props.closeModal();
+    if (e.code === 'Escape') {
+      this.props.closeModal();
+      console.log('Escape');
+    }
+      
+  };
+
+  hendleBackdrop = e => {
+    if (e.target === e.currentTarget) {
+      this.props.closeModal();
+    }
   };
 
   render() {
-
-    const {imageGallery} = this.props;
-      return (
-        <div className="overlay">
-          <div className="modal">
-            <img src={imageGallery} alt={imageGallery} />
-          </div>
+   
+    const { image } = this.props;
+    console.log('image in Modal:', image);
+    return (
+      <div className="overlay" onClick={this.hendleBackdrop}>
+        <div className="modal">
+          <img src={image} alt="" />
         </div>
-      );
-
+      </div>
+    );
   }
 }
   

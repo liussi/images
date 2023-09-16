@@ -7,7 +7,7 @@ export class App extends Component {
   state = {
     imageName: '',
     currentPage: 1,
-    imageGallery: [],
+   
   };
   
   getApp = (imageName, currentPage)=> {
@@ -31,13 +31,11 @@ export class App extends Component {
 currentPage: prevState.currentPage + 1
     }))
   };
-  
 
   hendleFormSubmit = imageName => {
     if (imageName.trim() === '') {
       return;
     }
-
     this.setState({ imageName });
   };
 

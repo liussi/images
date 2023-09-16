@@ -9,7 +9,7 @@ export default class ImageGallery extends Component {
     imageGallery: [],
     error: null,
     status: 'idle',
-
+    selectedImage: null,
     isOpenModal: false,
   };
 
@@ -20,33 +20,29 @@ export default class ImageGallery extends Component {
 
     if (
       prevProps.currentPage !== this.props.currentPage &&
-      this.props.currentPage >1 ) {
-    this.loadMoreImages();
-        }
+      this.props.currentPage > 1
+    ) {
+      this.loadMoreImages();
+    }
   }
-  
+
   fetchLoad = () => {
     const { getApp, imageName, currentPage } = this.props;
-    
-        getApp(imageName, currentPage)
-          .then(response =>
-            this.setState({
-              imageGallery: response.hits,
-              status: 'resolved',
-            })
-          )
-          .catch(error => this.setState({ error, status: 'rejected' }))
-          .finally(() => this.setState({ loading: false }));
-         
-        }
-      
-  loadMoreImages = () => {        
+
+    getApp(imageName, currentPage)
+      .then(response =>
+        this.setState({
+          imageGallery: response.hits,
+          status: 'resolved',
+        })
+      )
+      .catch(error => this.setState({ error, status: 'rejected' }))
+      .finally(() => this.setState({ loading: false }));
+  };
+
+  loadMoreImages = () => {
     console.log('imageGallery:', this.state.imageGallery);
-    const {
-      imageName,
-      currentPage,
-      getApp,
-    } = this.props;
+    const { imageName, currentPage, getApp } = this.props;
 
     getApp(imageName, currentPage)
       .then(response => {
@@ -57,15 +53,16 @@ export default class ImageGallery extends Component {
       })
       .catch(error => this.setState({ error, status: 'rejected' }))
       .finally(() => this.setState({ loading: false }));
-    };
-  
-  
+  };
 
-  openModal = () => this.setState({ isOpenModal: true });
+  openModal = largeImageURL => {
+    this.setState({ isOpenModal: true, selectedImage: largeImageURL });
+    console.log(largeImageURL);
+  };
   closeModal = () => this.setState({ isOpenModal: false });
 
   render() {
-    const { imageGallery, status } = this.state;
+    const { imageGallery, status, isOpenModal, selectedImage } = this.state;
     if (status === 'idle') {
       return <div>введіть імя або нотифікашка...</div>;
     }
@@ -79,34 +76,33 @@ export default class ImageGallery extends Component {
     }
 
     if (status === 'resolved') {
-     
       return (
         <div>
           <ul className="gallery">
             {imageGallery.map(item => (
               <ImageGalleryItem
                 key={item.id}
-                
                 item={item}
-                onClick={this.openModal}
+                onClick={() => this.openModal(item.largeImageURL)}
               />
             ))}
           </ul>
           {
             <Button
-             
-          
               App={this.props.App}
               onPageUpdate={this.props.onPageUpdate}
               imageName={this.props.imageName}
             />
           }
-          <Modal
-            imageGallery={this.props.imageGallery}
-            openModal={this.openModal}
-            closeModal={this.closeModal}
-            loadMoreImages={this.loadMoreImages}
-          />
+          {isOpenModal && (
+            <Modal
+              imageGallery={this.state.imageGallery}
+              openModal={this.openModal}
+              closeModal={this.closeModal}
+              loadMoreImages={this.loadMoreImages}
+              image={selectedImage}
+            />
+          )}
         </div>
       );
     }
