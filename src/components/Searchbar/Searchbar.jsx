@@ -1,6 +1,8 @@
 import { FaSearch } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import React, { Component } from 'react';
+ import { toast } from 'react-toastify';
+
 import {
   SearchbarContainer,
   SearchFormContainer,
@@ -14,27 +16,32 @@ export default class Searchbar extends Component {
   };
 
   handleSubmitName = e => {
-    this.setState({ imageName: e.currentTarget.value.toLowerCase() });
+    const value = e.currentTarget.value;
+
+      this.setState({
+      imageName: value.toLowerCase(),
+    });
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    const {imageName, currentPage} = this.state
 
-    if (this.state.imageName.trim() === '') {
+    if (imageName.trim() === '') {
+       toast.error('ERROR😲');
       return;
     }
-    this.props.onSubmit(this.state.imageName, this.state.currentPage);
+    this.props.onSubmit(imageName,currentPage);
     this.setState({ imageName: '' });
   };
+  
   render() {
     return (
-      <IconContext.Provider
-        value={{ color: 'blue', size: '2em'}}
-      >
+      <IconContext.Provider value={{ color: 'blue', size: '2em' }}>
         <SearchbarContainer>
           <SearchFormContainer onSubmit={this.handleSubmit}>
             <SearchFormButton type="submit">
-                <FaSearch />
+              <FaSearch />
             </SearchFormButton>
             <SearchFormInput
               onChange={this.handleSubmitName}

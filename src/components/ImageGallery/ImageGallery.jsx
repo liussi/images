@@ -4,11 +4,11 @@ import React, { Component } from 'react'
 import Button from 'components/Button/Button';
 import Modal from '../Modal/Modal';
 import ImageGalleryContainer from './ImageGallery.styled'
+ import { toast } from 'react-toastify';
 
 export default class ImageGallery extends Component {
   state = {
     imageGallery: [],
-    error: null,
     status: 'idle',
     selectedImage: null,
     isOpenModal: false,
@@ -16,19 +16,22 @@ export default class ImageGallery extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.imageName !== this.props.imageName) {
+
       this.fetchLoad();
     }
-
     if (
       prevProps.currentPage !== this.props.currentPage &&
       this.props.currentPage > 1
     ) {
+
       this.loadMoreImages();
     }
   }
 
   fetchLoad = () => {
     const { getApp, imageName, currentPage } = this.props;
+
+     this.setState({ status: 'pedding' });
 
     getApp(imageName, currentPage)
       .then(response =>
@@ -38,12 +41,13 @@ export default class ImageGallery extends Component {
         })
       )
       .catch(error => this.setState({ error, status: 'rejected' }))
-      .finally(() => this.setState({ loading: false }));
   };
 
   loadMoreImages = () => {
-    console.log('imageGallery:', this.state.imageGallery);
+    
     const { imageName, currentPage, getApp } = this.props;
+
+     this.setState({ status: 'pedding' });
 
     getApp(imageName, currentPage)
       .then(response => {
@@ -53,32 +57,32 @@ export default class ImageGallery extends Component {
         }));
       })
       .catch(error => this.setState({ error, status: 'rejected' }))
-      .finally(() => this.setState({ loading: false }));
   };
 
   openModal = largeImageURL => {
     this.setState({ isOpenModal: true, selectedImage: largeImageURL });
   };
+  
   closeModal = () => this.setState({ isOpenModal: false });
 
   render() {
-    const { imageGallery, status, isOpenModal, selectedImage } = this.state;
-    if (status === 'idle') {
-      return <div>введіть імя або нотифікашка...</div>;
-    }
+    const { status, imageGallery, isOpenModal, selectedImage, currentPage } =
+      this.state;
+    const { perPage } = this.props;
 
     if (status === 'pedding') {
       return <Loader />;
     }
-
+    
     if (status === 'rejected') {
-      return <h1>Помилка</h1>;
+      toast.error('ERROR😲');
+      return ;
     }
-
+    
     if (status === 'resolved') {
       return (
         <div>
-          <ImageGalleryContainer className="gallery">
+          <ImageGalleryContainer>
             {imageGallery.map(item => (
               <ImageGalleryItem
                 key={item.id}
@@ -87,19 +91,13 @@ export default class ImageGallery extends Component {
               />
             ))}
           </ImageGalleryContainer>
-          {
-            <Button
-              App={this.props.App}
-              onPageUpdate={this.props.onPageUpdate}
-              imageName={this.props.imageName}
-            />
-          }
+          {imageGallery.length > 0 &&
+            imageGallery.length > perPage &&
+            !currentPage && <Button onPageUpdate={this.props.onPageUpdate} />}
           {isOpenModal && (
             <Modal
-              imageGallery={this.state.imageGallery}
               openModal={this.openModal}
               onClose={this.closeModal}
-              loadMoreImages={this.loadMoreImages}
               image={selectedImage}
             />
           )}
