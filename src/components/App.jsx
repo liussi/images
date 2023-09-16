@@ -1,16 +1,15 @@
-
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
+import {AppContainer ,GlobalStyles}  from './GlobalStyles.styled'
 
 export class App extends Component {
   state = {
     imageName: '',
     currentPage: 1,
-   
   };
-  
-  getApp = (imageName, currentPage)=> {
+
+  getApp = (imageName, currentPage) => {
     const KEY = '38529296-de6c3fac31b2614a8135b6c10';
 
     console.log('currentPage:', currentPage);
@@ -24,12 +23,12 @@ export class App extends Component {
         new Error(`Таких фото немає для запиту: ${imageName}`)
       );
     });
-  }
+  };
 
   handlePageUpdate = () => {
     this.setState(prevState => ({
-currentPage: prevState.currentPage + 1
-    }))
+      currentPage: prevState.currentPage + 1,
+    }));
   };
 
   hendleFormSubmit = imageName => {
@@ -39,19 +38,19 @@ currentPage: prevState.currentPage + 1
     this.setState({ imageName });
   };
 
- 
   render() {
     return (
-      <div>
-        <Searchbar onSubmit={this.hendleFormSubmit} />
-        <ImageGallery
-          imageName={this.state.imageName}
-          getApp={this.getApp}
-          currentPage={this.state.currentPage}
-          onPageUpdate={this.handlePageUpdate}
-        />
-      </div>
+      <GlobalStyles>
+        <AppContainer>
+          <Searchbar onSubmit={this.hendleFormSubmit} />
+          <ImageGallery
+            imageName={this.state.imageName}
+            getApp={this.getApp}
+            currentPage={this.state.currentPage}
+            onPageUpdate={this.handlePageUpdate}
+          />
+        </AppContainer>
+      </GlobalStyles>
     );
   }
 }
-

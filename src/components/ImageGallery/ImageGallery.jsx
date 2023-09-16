@@ -3,6 +3,7 @@ import Loader from '../Loader/Loader';
 import React, { Component } from 'react'
 import Button from 'components/Button/Button';
 import Modal from '../Modal/Modal';
+import ImageGalleryContainer from './ImageGallery.styled'
 
 export default class ImageGallery extends Component {
   state = {
@@ -57,7 +58,6 @@ export default class ImageGallery extends Component {
 
   openModal = largeImageURL => {
     this.setState({ isOpenModal: true, selectedImage: largeImageURL });
-    console.log(largeImageURL);
   };
   closeModal = () => this.setState({ isOpenModal: false });
 
@@ -78,7 +78,7 @@ export default class ImageGallery extends Component {
     if (status === 'resolved') {
       return (
         <div>
-          <ul className="gallery">
+          <ImageGalleryContainer className="gallery">
             {imageGallery.map(item => (
               <ImageGalleryItem
                 key={item.id}
@@ -86,7 +86,7 @@ export default class ImageGallery extends Component {
                 onClick={() => this.openModal(item.largeImageURL)}
               />
             ))}
-          </ul>
+          </ImageGalleryContainer>
           {
             <Button
               App={this.props.App}

@@ -1,6 +1,5 @@
-
-  import React, { Component } from 'react'
-  import '../styles.css'
+import React, { Component } from 'react';
+import { Overlay, ModalEl } from './Modal.styled';
 
 export default class Modal extends Component {
   componentDidUpdate() {
@@ -9,12 +8,12 @@ export default class Modal extends Component {
   componentWillUnmount() {
     window.removeEventListener('keydown', this.hendleEsc);
   }
-  hendleEsc = e => {
-    if (e.code === 'Escape') {
+  hendleEsc = event => {
+    console.log('Key pressed:', event.code); // Додайте цей рядок
+    if (event.code === 'Escape') {
       this.props.closeModal();
       console.log('Escape');
     }
-      
   };
 
   hendleBackdrop = e => {
@@ -24,20 +23,14 @@ export default class Modal extends Component {
   };
 
   render() {
-   
     const { image } = this.props;
-    console.log('image in Modal:', image);
+
     return (
-      <div className="overlay" onClick={this.hendleBackdrop}>
-        <div className="modal">
+      <Overlay  onClick={this.hendleBackdrop}>
+        <ModalEl >
           <img src={image} alt="" />
-        </div>
-      </div>
+        </ModalEl>
+      </Overlay>
     );
   }
 }
-  
-
-
-
-

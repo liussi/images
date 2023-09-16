@@ -1,46 +1,50 @@
+import React, { Component } from 'react';
+import {
+  SearchbarContainer,
+  SearchFormContainer,
+  SearchFormButton,
+  SearchFormButtonLabel,
+  SearchFormInput,
+} from './SearchForm.styled';
 
-    import React, { Component } from 'react'
-    
 export default class Searchbar extends Component {
   state = {
     imageName: '',
-  
   };
 
   handleSubmitName = e => {
     this.setState({ imageName: e.currentTarget.value.toLowerCase() });
-}
+  };
 
   handleSubmit = event => {
     event.preventDefault();
-    
-      if (this.state.imageName.trim() === '') {
-          return
-      }
-      this.props.onSubmit(this.state.imageName, this.state.currentPage);
-      this.setState({ imageName: '' });
-  }
+
+    if (this.state.imageName.trim() === '') {
+      return;
+    }
+    this.props.onSubmit(this.state.imageName, this.state.currentPage);
+    this.setState({ imageName: '' });
+  };
   render() {
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
-          </button>
+      <SearchbarContainer >
+        <SearchFormContainer  onSubmit={this.handleSubmit}>
+          <SearchFormButton type="submit" >
+            <SearchFormButtonLabel >
+              Search
+            </SearchFormButtonLabel>
+          </SearchFormButton>
 
-          <input
+          <SearchFormInput
             onChange={this.handleSubmitName}
             value={this.state.imageName}
-            className="input"
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
           />
-        </form>
-      </header>
+        </SearchFormContainer>
+      </SearchbarContainer>
     );
   }
 }
-    
- 
