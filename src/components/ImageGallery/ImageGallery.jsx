@@ -6,32 +6,65 @@ import Modal from '../Modal/Modal';
 
 export default class ImageGallery extends Component {
   state = {
-    imageGallery: null,
+    imageGallery: [],
     error: null,
     status: 'idle',
-    currentPage: 1,
+
     isOpenModal: false,
   };
 
-  componentDidUpdate(prevProps, PrevState, App) {
+  componentDidUpdate(prevProps) {
     if (prevProps.imageName !== this.props.imageName) {
-      this.setState({ status: 'pedding' });
-
-      const { currentPage } = this.state;
-
-      this.props
-        .App(this.props.imageName, currentPage)
-        .then(imageGallery =>
-          this.setState({
-            imageGallery,
-            // currentPage : 1,
-            status: 'resolved',
-          })
-        )
-        .catch(error => this.setState({ error, status: 'rejected' }))
-        .finally(() => this.setState({ loading: false }));
+      this.fetchLoad();
     }
+
+    if (
+      prevProps.currentPage !== this.props.currentPage &&
+      this.props.currentPage >1 ) {
+    this.loadMoreImages();
+        }
   }
+  
+  fetchLoad = () => {
+    const { getApp, imageName, currentPage } = this.props;
+    
+        getApp(imageName, currentPage)
+          .then(response =>
+            this.setState({
+              imageGallery: response.hits,
+              status: 'resolved',
+            })
+          )
+          .catch(error => this.setState({ error, status: 'rejected' }))
+          .finally(() => this.setState({ loading: false }));
+         
+        }
+      
+  loadMoreImages = () => {        
+    console.log('imageGallery:', this.state.imageGallery);
+    const {
+      imageName,
+      prevProps,
+      currentPage,
+      getApp,
+      onPageUpdate,
+      imageGallery,
+    } = this.props;
+        
+    
+
+    getApp(imageName, currentPage)
+      .then(response => {
+        this.setState(prevState => ({
+          imageGallery: [...prevState.imageGallery, ...response.hits],
+          status: 'resolved',
+        }));
+      })
+      .catch(error => this.setState({ error, status: 'rejected' }))
+      .finally(() => this.setState({ loading: false }));
+    };
+  
+  
 
   openModal = () => this.setState({ isOpenModal: true });
   closeModal = () => this.setState({ isOpenModal: false });
@@ -51,30 +84,33 @@ export default class ImageGallery extends Component {
     }
 
     if (status === 'resolved') {
+     
       return (
         <div>
           <ul className="gallery">
-            {imageGallery.hits.map(item => (
+            {imageGallery.map(item => (
               <ImageGalleryItem
                 key={item.id}
+                
                 item={item}
-                onclick={this.openModal}
+                onClick={this.openModal}
               />
             ))}
           </ul>
           {
             <Button
-              currentPage={this.props.currentPage}
-              imageGallery={this.state.imageGallery}
+             
+          
               App={this.props.App}
               onPageUpdate={this.props.onPageUpdate}
               imageName={this.props.imageName}
             />
           }
           <Modal
-            imageGallery={this.state.imageGallery.hits}
+            imageGallery={this.props.imageGallery}
             openModal={this.openModal}
             closeModal={this.closeModal}
+            loadMoreImages={this.loadMoreImages}
           />
         </div>
       );
