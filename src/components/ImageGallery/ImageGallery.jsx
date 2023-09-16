@@ -44,14 +44,9 @@ export default class ImageGallery extends Component {
     console.log('imageGallery:', this.state.imageGallery);
     const {
       imageName,
-      prevProps,
       currentPage,
       getApp,
-      onPageUpdate,
-      imageGallery,
     } = this.props;
-        
-    
 
     getApp(imageName, currentPage)
       .then(response => {
