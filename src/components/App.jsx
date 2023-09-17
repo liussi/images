@@ -42,6 +42,7 @@ export class App extends Component {
   };
 
   componentDidUpdate(_, prevState) {
+
     if (prevState.imageName !== this.state.imageName) {
       this.fetchLoad();
     }
@@ -49,22 +50,14 @@ export class App extends Component {
       prevState.currentPage !== this.state.currentPage &&
       this.state.currentPage > 1
     ) {
-      console.log('Calling loadMoreImages from componentDidUpdate'); // Додайте цей рядок
-
-      this.handleLoadMoreClick();
-    }
-  }
-  handleLoadMoreClick = () => {
-    const { currentPage, status } = this.state;
-    if (status !== 'pedding') {
       this.loadMoreImages();
     }
-  };
+  }
 
   fetchLoad = () => {
     const { imageName, currentPage } = this.state;
     const { getApp } = this;
-    console.log('Current Page in fetchLoad:', currentPage);
+   
     this.setState({ status: 'pedding' });
 
     getApp(imageName, currentPage)
@@ -79,10 +72,8 @@ export class App extends Component {
   };
 
   loadMoreImages = () => {
-    console.log('loadMoreImages called');
     const { imageName, currentPage } = this.state;
     const { getApp } = this;
-    console.log('Current Page in loadMoreImages:', currentPage);
 
     getApp(imageName, currentPage)
       .then(response => {
