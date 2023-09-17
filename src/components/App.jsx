@@ -49,9 +49,17 @@ export class App extends Component {
       prevState.currentPage !== this.state.currentPage &&
       this.state.currentPage > 1
     ) {
-      this.loadMoreImages();
+      console.log('Calling loadMoreImages from componentDidUpdate'); // Додайте цей рядок
+
+      this.handleLoadMoreClick();
     }
   }
+  handleLoadMoreClick = () => {
+    const { currentPage, status } = this.state;
+    if (status !== 'pedding') {
+      this.loadMoreImages();
+    }
+  };
 
   fetchLoad = () => {
     const { imageName, currentPage } = this.state;
@@ -71,10 +79,10 @@ export class App extends Component {
   };
 
   loadMoreImages = () => {
+    console.log('loadMoreImages called');
     const { imageName, currentPage } = this.state;
     const { getApp } = this;
     console.log('Current Page in loadMoreImages:', currentPage);
-    this.setState({ status: 'pedding' });
 
     getApp(imageName, currentPage)
       .then(response => {
@@ -93,12 +101,9 @@ export class App extends Component {
   };
 
   hendleFormSubmit = ({ imageName }) => {
-    this.setState({ imageName });
+    this.setState({ imageName, currentPage: 1 });
   };
 
-  onPageReset = () => {
-    this.setState({ currentPage: 1 });
-  };
 
   render() {
     return (

@@ -33,7 +33,6 @@ export default class Searchbar extends Component {
     }
     this.props.onSubmit({ imageName });
     this.setState({ imageName: '' });
-    this.props.onPageReset();
   };
 
   render() {
