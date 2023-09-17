@@ -25,14 +25,14 @@ export default class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const {imageName, currentPage} = this.state
+    const { imageName } = this.state;
 
     if (imageName.trim() === '') {
        toast.error('ERROR😲');
       return;
     }
-    this.props.onSubmit(imageName,currentPage);
-    this.setState({ imageName: '' });
+    this.props.onSubmit({ imageName });
+    this.setState({ imageName: ''});
   };
   
   render() {
