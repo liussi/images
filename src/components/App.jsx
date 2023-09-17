@@ -87,15 +87,17 @@ export class App extends Component {
   };
 
   handlePageUpdate = () => {
-    this.setState(
-      prevState => ({
-        currentPage: prevState.currentPage + 1,
-      })
-    );
+    this.setState(prevState => ({
+      currentPage: prevState.currentPage + 1,
+    }));
   };
 
   hendleFormSubmit = ({ imageName }) => {
     this.setState({ imageName });
+  };
+
+  onPageReset = () => {
+    this.setState({ currentPage: 1 });
   };
 
   render() {
@@ -105,7 +107,7 @@ export class App extends Component {
           <Searchbar
             onSubmit={this.hendleFormSubmit}
             imageName={this.state.imageName}
-            currentPage={this.state.currentPage}
+            onPageReset={this.onPageReset}
           />
           <ImageGallery
             currentPage={this.state.currentPage}

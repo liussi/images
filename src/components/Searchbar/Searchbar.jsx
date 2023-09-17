@@ -18,7 +18,7 @@ export default class Searchbar extends Component {
   handleSubmitName = e => {
     const value = e.currentTarget.value;
 
-      this.setState({
+    this.setState({
       imageName: value.toLowerCase(),
     });
   };
@@ -26,15 +26,16 @@ export default class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const { imageName } = this.state;
-
+    
     if (imageName.trim() === '') {
-       toast.error('ERROR😲');
+      toast.error('ERROR😲');
       return;
     }
     this.props.onSubmit({ imageName });
-    this.setState({ imageName: ''});
+    this.setState({ imageName: '' });
+    this.props.onPageReset();
   };
-  
+
   render() {
     return (
       <IconContext.Provider value={{ color: 'blue', size: '2em' }}>
