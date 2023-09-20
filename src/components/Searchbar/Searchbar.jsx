@@ -26,10 +26,8 @@ export default function Searchbar({ onSubmit }) {
       toast.error('ERROR😲');
       return;
     }
-    console.log('imageName перед отправкой формы:', imageName); // Добавьте эту строку
-
+   
     onSubmit({ imageName });
-
     setImageName('');
   };
 
