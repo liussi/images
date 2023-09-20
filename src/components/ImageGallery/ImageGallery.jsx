@@ -1,67 +1,66 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import Loader from '../Loader/Loader';
-import React, { Component } from 'react'
-import Button from 'components/Button/Button';
+import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
 import ImageGalleryContainer from './ImageGallery.styled'
  import { toast } from 'react-toastify';
+import { useState } from 'react';
 
-export default class ImageGallery extends Component {
-  state = {
-    selectedImage: null,
-    isOpenModal: false,
-   
+export default function ImageGallery({
+  status,
+  imageGallery,
+  totalHits,
+  perPage,
+  currentPage,
+  onPageUpdate,
+}) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const openModal = largeImageURL => {
+    setIsOpenModal(true);
+    setSelectedImage(largeImageURL);
   };
 
-  openModal = largeImageURL => {
-    this.setState({ isOpenModal: true, selectedImage: largeImageURL });
-  };
+  const closeModal = () => setIsOpenModal(false);
 
-  closeModal = () => this.setState({ isOpenModal: false });
+  const allPage = totalHits / perPage;
 
-  render() {
-    const {  isOpenModal, selectedImage } = this.state;
-    const { imageGallery, currentPage, perPage, totalHits, status } = this.props;
+  if (status === 'pedding') {
+    return <Loader />;
+  }
 
-    const allPage = totalHits / perPage;
+  if (status === 'rejected') {
+    toast.error('ERROR😲');
+    return;
+  }
 
-    if (status === 'pedding') {
-      return <Loader />;
-    }
-
-    if (status === 'rejected') {
-      toast.error('ERROR😲');
-      return;
-    }
-
-    if (status === 'resolved') {
-      return (
-        <div>
-          <ImageGalleryContainer>
-            {imageGallery.map(item => (
+  if (status === 'resolved') {
+    return (
+      <div>
+        <ImageGalleryContainer>
+          { imageGallery.map(item => (
               <ImageGalleryItem
                 key={item.id}
                 item={item}
-                onClick={() => this.openModal(item.largeImageURL)}
+                onClick={() => openModal(item.largeImageURL)}
               />
             ))}
-          </ImageGalleryContainer>
-          {currentPage <= allPage &&
-            imageGallery &&
-            imageGallery.length > 0 && (
-              <Button onPageUpdate={this.props.onPageUpdate} />
-            )}
+        </ImageGalleryContainer>
+        {currentPage <= allPage && imageGallery && imageGallery.length > 0 && (
+          <Button onPageUpdate={onPageUpdate} />
+        )}
 
-          {isOpenModal && (
-            <Modal
-              openModal={this.openModal}
-              onClose={this.closeModal}
-              image={selectedImage}
-            />
-          )}
-        </div>
-      );
-    }
+        {isOpenModal && (
+          <Modal
+            openModal={openModal}
+            onClose={closeModal}
+            image={selectedImage}
+          />
+        )}
+      </div>
+    );
   }
-}
+} 
+
 

@@ -1,120 +1,87 @@
-import React, { Component } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import {AppContainer ,GlobalStyles}  from './GlobalStyles.styled'
+import { AppContainer, GlobalStyles } from './GlobalStyles.styled';
 import { ToastContainer, toast } from 'react-toastify';
- import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 
+function App() {
+  const [imageName, setImageName] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(12);
+  const [imageGallery, setImageGallery] = useState([]);
+  const [totalHits, setTotalHits] = useState(null);
+  const [status, setStatus] = useState('idle');
 
-export class App extends Component {
-  state = {
-    imageName: '',
-    currentPage: 1,
-    perPage: 12,
-    imageGallery: [],
-    totalHits: null,
-    status: 'idle',
-  };
+  const fetchImages = async () => {
 
-  getApp = () => {
-    const KEY = '38529296-de6c3fac31b2614a8135b6c10';
-    const { perPage, imageName, currentPage } = this.state;
+    try {
+      const KEY = '38529296-de6c3fac31b2614a8135b6c10';
+      const response = await fetch(
+        `https://pixabay.com/api/?q=${imageName}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
+      );
 
-    return fetch(
-      `https://pixabay.com/api/?q=${imageName}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(
-          toast.promise({
-            error: `There are no such photos for the request: ${imageName}`,
-          })
+      if (!response.ok) {
+        throw new Error(
+          `There was an error fetching images for the query: ${imageName}`
         );
-      })
-      .then(data => {
-        const hits = data.hits;
-        const totalHits = data.totalHits;
-        return { hits, totalHits };
-      });
-  };
+      }
 
-  componentDidUpdate(_, prevState) {
+      const data = await response.json();
+      const hits = data.hits;
+      const totalHits = data.totalHits;
 
-    if (prevState.imageName !== this.state.imageName) {
-      this.fetchLoad();
+      if (currentPage === 1) {
+        setImageGallery(hits);
+      } else {
+        setImageGallery(prevImages => [...prevImages, ...hits]);
+      }
+
+      setTotalHits(totalHits);
+      setStatus('resolved');
+    } catch (error) {
+      console.error(error);
+      setStatus('rejected');
+      toast.error(`Error: ${error.message}`);
     }
-    if (
-      prevState.currentPage !== this.state.currentPage &&
-      this.state.currentPage > 1
-    ) {
-      this.loadMoreImages();
-    }
-  }
-
-  fetchLoad = () => {
-    const { imageName, currentPage } = this.state;
-    const { getApp } = this;
-   
-    this.setState({ status: 'pedding' });
-
-    getApp(imageName, currentPage)
-      .then(({ hits, totalHits }) =>
-        this.setState({
-          imageGallery: hits,
-          totalHits: totalHits,
-          status: 'resolved',
-        })
-      )
-      .catch(error => this.setState({ error, status: 'rejected' }));
   };
 
-  loadMoreImages = () => {
-    const { imageName, currentPage } = this.state;
-    const { getApp } = this;
+ 
+  useEffect(() => {
+    if (imageName === '') return;
 
-    getApp(imageName, currentPage)
-      .then(response => {
-        this.setState(prevState => ({
-          imageGallery: [...prevState.imageGallery, ...response.hits],
-          status: 'resolved',
-        }));
-      })
-      .catch(error => this.setState({ error, status: 'rejected' }));
+    fetchImages();
+  }, [imageName, currentPage]);
+
+  const handlePageUpdate = () => {
+    setCurrentPage(prevPage => prevPage + 1);
   };
 
-  handlePageUpdate = () => {
-    this.setState(prevState => ({
-      currentPage: prevState.currentPage + 1,
-    }));
+  const handleFormSubmit = ({ imageName }) => {
+    setImageName(imageName);
+    setCurrentPage(1);
+    setImageGallery([]);
   };
 
-  hendleFormSubmit = ({ imageName }) => {
-    this.setState({ imageName, currentPage: 1 });
-  };
-
-
-  render() {
-    return (
-      <GlobalStyles>
-        <AppContainer>
-          <Searchbar
-            onSubmit={this.hendleFormSubmit}
-            imageName={this.state.imageName}
-            onPageReset={this.onPageReset}
-          />
-          <ImageGallery
-            currentPage={this.state.currentPage}
-            onPageUpdate={this.handlePageUpdate}
-            perPage={this.state.perPage}
-            imageGallery={this.state.imageGallery}
-            totalHits={this.state.totalHits}
-            status={this.state.status}
-          />
-        </AppContainer>
-        <ToastContainer autoClose={3000} theme="colored" />
-      </GlobalStyles>
-    );
-  }
+  return (
+    <GlobalStyles>
+      <AppContainer>
+        <Searchbar onSubmit={handleFormSubmit} />
+        <ImageGallery
+          currentPage={currentPage}
+          onPageUpdate={handlePageUpdate}
+          perPage={perPage}
+          imageGallery={imageGallery}
+          totalHits={totalHits}
+          status={status}
+        />
+      </AppContainer>
+      <ToastContainer autoClose={3000} theme="colored" />
+    </GlobalStyles>
+  );
 }
+
+export default App;
+
+

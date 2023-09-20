@@ -1,7 +1,8 @@
 import { FaSearch } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
-import React, { Component } from 'react';
  import { toast } from 'react-toastify';
+import { useState } from 'react';
+
 
 import {
   SearchbarContainer,
@@ -10,50 +11,46 @@ import {
   SearchFormInput,
 } from './SearchForm.styled';
 
-export default class Searchbar extends Component {
-  state = {
-    imageName: '',
+export default function Searchbar({ onSubmit }) {
+  const [imageName, setImageName] = useState('');
+
+  const handleSubmitName = e => {
+    const value = e.currentTarget.value.toLowerCase();
+    setImageName(value);
   };
 
-  handleSubmitName = e => {
-    const value = e.currentTarget.value;
-
-    this.setState({
-      imageName: value.toLowerCase(),
-    });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    const { imageName } = this.state;
-    
+
     if (imageName.trim() === '') {
       toast.error('ERROR😲');
       return;
     }
-    this.props.onSubmit({ imageName });
-    this.setState({ imageName: '' });
+    console.log('imageName перед отправкой формы:', imageName); // Добавьте эту строку
+
+    onSubmit({ imageName });
+
+    setImageName('');
   };
 
-  render() {
-    return (
-      <IconContext.Provider value={{ color: 'blue', size: '2em' }}>
-        <SearchbarContainer>
-          <SearchFormContainer onSubmit={this.handleSubmit}>
-            <SearchFormButton type="submit">
-              <FaSearch />
-            </SearchFormButton>
-            <SearchFormInput
-              onChange={this.handleSubmitName}
-              value={this.state.imageName}
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-            />
-          </SearchFormContainer>
-        </SearchbarContainer>
-      </IconContext.Provider>
-    );
-  }
+  return (
+    <IconContext.Provider value={{ color: 'blue', size: '2em' }}>
+      <SearchbarContainer>
+        <SearchFormContainer onSubmit={handleSubmit}>
+          <SearchFormButton type="submit">
+            <FaSearch />
+          </SearchFormButton>
+          <SearchFormInput
+            onChange={handleSubmitName}
+            value={imageName}
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+        </SearchFormContainer>
+      </SearchbarContainer>
+    </IconContext.Provider>
+  );
 }
+
