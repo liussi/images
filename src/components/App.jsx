@@ -47,7 +47,6 @@ function App() {
     }
   };
 
- 
   useEffect(() => {
     if (imageName === '') return;
 
