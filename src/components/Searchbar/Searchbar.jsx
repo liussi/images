@@ -1,8 +1,7 @@
 import { FaSearch } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
- import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useState } from 'react';
-
 
 import {
   SearchbarContainer,
@@ -26,7 +25,7 @@ export default function Searchbar({ onSubmit }) {
       toast.error('ERROR😲');
       return;
     }
-   
+
     onSubmit({ imageName });
     setImageName('');
   };
@@ -51,4 +50,3 @@ export default function Searchbar({ onSubmit }) {
     </IconContext.Provider>
   );
 }
-

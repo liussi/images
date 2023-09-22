@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -15,16 +14,14 @@ function App() {
   const [totalHits, setTotalHits] = useState(null);
   const [status, setStatus] = useState('idle');
 
-
   useEffect(() => {
-    
-    const fetchImagesLoadmor= async () =>{
-       const { hits, totalHits } = await fetchImages({
-         setStatus,
-         imageName,
-         currentPage,
-         perPage,
-       });
+    const fetchImagesLoadmor = async () => {
+      const { hits, totalHits } = await fetchImages({
+        setStatus,
+        imageName,
+        currentPage,
+        perPage,
+      });
       try {
         setImageGallery(prevImages => [...prevImages, ...hits]);
         setTotalHits(totalHits);
@@ -34,11 +31,10 @@ function App() {
         setStatus('rejected');
         toast.error(`Error: ${error.message}`);
       }
-    }
-   
+    };
+
     (imageName && fetchImagesLoadmor()) ||
       (currentPage > 1 && fetchImagesLoadmor());
-    
   }, [imageName, currentPage, perPage]);
 
   const handlePageUpdate = () => {
@@ -70,5 +66,3 @@ function App() {
 }
 
 export default App;
-
-
