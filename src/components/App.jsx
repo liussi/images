@@ -5,6 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import { AppContainer, GlobalStyles } from './GlobalStyles.styled';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import fetchImages from '../servises/api';
 
 function App() {
   const [imageName, setImageName] = useState('');
@@ -14,44 +15,31 @@ function App() {
   const [totalHits, setTotalHits] = useState(null);
   const [status, setStatus] = useState('idle');
 
-  const fetchImages = async () => {
-
-    try {
-      const KEY = '38529296-de6c3fac31b2614a8135b6c10';
-      const response = await fetch(
-        `https://pixabay.com/api/?q=${imageName}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `There was an error fetching images for the query: ${imageName}`
-        );
-      }
-
-      const data = await response.json();
-      const hits = data.hits;
-      const totalHits = data.totalHits;
-
-      if (currentPage === 1) {
-        setImageGallery(hits);
-      } else {
-        setImageGallery(prevImages => [...prevImages, ...hits]);
-      }
-
-      setTotalHits(totalHits);
-      setStatus('resolved');
-    } catch (error) {
-      console.error(error);
-      setStatus('rejected');
-      toast.error(`Error: ${error.message}`);
-    }
-  };
 
   useEffect(() => {
-    if (imageName === '') return;
-
-    fetchImages();
-  }, [imageName, currentPage]);
+    
+    const fetchImagesLoadmor= async () =>{
+       const { hits, totalHits } = await fetchImages({
+         setStatus,
+         imageName,
+         currentPage,
+         perPage,
+       });
+      try {
+        setImageGallery(prevImages => [...prevImages, ...hits]);
+        setTotalHits(totalHits);
+        setStatus('resolved');
+      } catch (error) {
+        console.error(error);
+        setStatus('rejected');
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+   
+    (imageName && fetchImagesLoadmor()) ||
+      (currentPage > 1 && fetchImagesLoadmor());
+    
+  }, [imageName, currentPage, perPage]);
 
   const handlePageUpdate = () => {
     setCurrentPage(prevPage => prevPage + 1);
