@@ -15,7 +15,7 @@ export default function Modal({image,onClose}){
     return () => {
       window.removeEventListener('keydown', hendleEsc);
     };
-  }, []);
+  }, [onClose]);
 
  
   function hendleBackdrop (e) {
