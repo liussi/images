@@ -1,5 +1,7 @@
 # Images
 
+This project was created using Create React App.
+
 Our program offers a convenient way to browse through photos based on your query. It includes a search field where you can enter keywords to search for photos. Upon searching, you'll receive results in the form of multiple photos displayed on the page, with pagination.
 
 To view a photo in a larger size, you can click on the "View" button. This opens a modal window with the selected photo, allowing you to examine the image in detail.
